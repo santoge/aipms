@@ -1,0 +1,41 @@
+User-agent: *
+Allow: /
+Allow: /_next/static/
+Allow: /_next/image/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /private/
+
+# Allow important directories
+Allow: /public/
+Allow: /images/
+Allow: /favicon.ico
+Allow: /manifest.json
+
+# Allow important files
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /favicon.png
+Allow: /manifest.json
+
+# Sitemaps
+Sitemap: https://www.adhithyangroupofinstitutions.com/sitemap.xml
+
+# Crawl delay for better server performance
+Crawl-delay: 1
+
+# Specific instructions for major search engines
+User-agent: Googlebot
+Allow: /
+Allow: /_next/static/
+Allow: /_next/image/
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Allow: /_next/static/
+Allow: /_next/image/
+Disallow: /admin/
+Disallow: /api/
