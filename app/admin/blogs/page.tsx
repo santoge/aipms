@@ -1,4 +1,4 @@
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -9,24 +9,30 @@ import DeleteBlogButton from "@/components/delete-blog-button"
 export const dynamic = "force-dynamic"
 
 export default async function BlogsPage() {
-  const supabase = createServerClient()
+  const supabase = createClient()
 
-  if (!supabase) {
-    return <div>Supabase not configured</div>
-  }
+  let posts = []
+  let error = null
 
-  // Fetch blog posts with author and category information
-  const { data: posts, error } = await supabase
-    .from("blog_posts")
-    .select(`
-      *,
-      authors(name),
-      categories(name)
-    `)
-    .order("created_at", { ascending: false })
+  try {
+    const { data, error: fetchError } = await supabase
+      .from("blog_posts")
+      .select(`
+        *,
+        authors(name),
+        categories(name)
+      `)
+      .order("created_at", { ascending: false })
 
-  if (error) {
-    console.error("Error fetching posts:", error)
+    if (fetchError) {
+      console.error("Error fetching posts:", fetchError)
+      error = fetchError
+    } else {
+      posts = data || []
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err)
+    error = err
   }
 
   return (
