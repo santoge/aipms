@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, Trash2, Save, X } from "lucide-react"
-import { supabase } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 
 interface CategoryManagerProps {
   categories: any[]
@@ -31,6 +31,7 @@ export default function CategoryManager({ categories: initialCategories, type, t
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const supabase = createClient()
     if (!supabase) return
 
     try {
@@ -66,6 +67,7 @@ export default function CategoryManager({ categories: initialCategories, type, t
   }
 
   const handleDelete = async (id: string, name: string) => {
+    const supabase = createClient()
     if (!supabase) return
     if (!confirm(`Are you sure you want to delete "${name}"?`)) return
 

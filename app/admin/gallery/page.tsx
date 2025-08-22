@@ -1,4 +1,4 @@
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -9,7 +9,7 @@ import DeleteGalleryButton from "@/components/delete-gallery-button"
 export const dynamic = "force-dynamic"
 
 export default async function GalleryPage() {
-  const supabase = createServerClient()
+  const supabase = await createClient()
 
   if (!supabase) {
     return <div>Supabase not configured</div>

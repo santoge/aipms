@@ -10,8 +10,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2, Save, Upload } from "lucide-react"
+import { Loader2, Save, Upload, X } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
+import { compressImage } from "@/lib/image-utils"
 
 interface GalleryFormProps {
   initialData?: any
@@ -20,6 +21,7 @@ interface GalleryFormProps {
 export default function GalleryForm({ initialData }: GalleryFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [categories, setCategories] = useState<any[]>([])
   const [error, setError] = useState<string | null>(null)
 
@@ -101,25 +103,62 @@ export default function GalleryForm({ initialData }: GalleryFormProps) {
     }
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const maxSize = 10 * 1024 * 1024 // 10MB for gallery images
-      if (file.size > maxSize) {
-        setError("Image file size must be less than 10MB")
-        return
-      }
+    if (!file) return
 
-      const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+    setUploadingImage(true)
+    setError(null)
+
+    try {
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp"]
       if (!allowedTypes.includes(file.type)) {
-        setError("Please upload a valid image file (JPEG, PNG, WebP, or GIF)")
+        setError("Please upload a valid image file (JPEG, PNG, or WebP)")
         return
       }
 
-      const imageUrl = `/placeholder.svg?height=400&width=600&query=${encodeURIComponent(formData.title || "gallery image")}`
-      setFormData((prev) => ({ ...prev, image_url: imageUrl }))
+      // Compress image to below 150KB
+      const compressedFile = await compressImage(file, 150)
+      console.log(
+        `[v0] Gallery image - Original: ${(file.size / 1024).toFixed(1)}KB, Compressed: ${(compressedFile.size / 1024).toFixed(1)}KB`,
+      )
+
+      const supabase = createClient()
+      const fileExt = "jpg"
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
+      const filePath = `gallery-images/${fileName}`
+
+      const { data, error } = await supabase.storage.from("images").upload(filePath, compressedFile, {
+        cacheControl: "3600",
+        upsert: false,
+      })
+
+      if (error) {
+        console.error("Upload error:", error)
+        setError("Failed to upload image. Please try again.")
+        return
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("images").getPublicUrl(filePath)
+
+      setFormData((prev) => ({
+        ...prev,
+        image_url: publicUrl,
+        alt_text: prev.alt_text || formData.title, // Auto-set alt text if empty
+      }))
       setError(null)
+    } catch (error) {
+      console.error("Upload error:", error)
+      setError("Failed to process image. Please try again.")
+    } finally {
+      setUploadingImage(false)
     }
+  }
+
+  const removeImage = () => {
+    setFormData((prev) => ({ ...prev, image_url: "" }))
   }
 
   return (
@@ -201,20 +240,42 @@ export default function GalleryForm({ initialData }: GalleryFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image">Image *</Label>
+            <Label htmlFor="image">Image * (Auto-compressed to &lt;150KB)</Label>
             <div className="flex items-center space-x-4">
-              <Input id="image" type="file" accept="image/*" onChange={handleImageUpload} className="flex-1" />
-              <Button type="button" variant="outline" size="sm">
-                <Upload className="h-4 w-4 mr-2" />
-                Upload
+              <Input
+                id="image"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleImageUpload}
+                className="flex-1"
+                disabled={uploadingImage}
+              />
+              <Button type="button" variant="outline" size="sm" disabled={uploadingImage}>
+                {uploadingImage ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4 mr-2" />
+                )}
+                {uploadingImage ? "Compressing..." : "Upload"}
               </Button>
             </div>
             {formData.image_url && (
-              <img
-                src={formData.image_url || "/placeholder.svg"}
-                alt="Image preview"
-                className="w-48 h-32 object-cover rounded-lg mt-2"
-              />
+              <div className="relative inline-block">
+                <img
+                  src={formData.image_url || "/placeholder.svg"}
+                  alt="Image preview"
+                  className="w-48 h-32 object-cover rounded-lg mt-2"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  className="absolute top-1 right-1 h-6 w-6 p-0"
+                  onClick={removeImage}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
             )}
           </div>
 

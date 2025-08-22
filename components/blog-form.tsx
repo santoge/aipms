@@ -11,8 +11,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2, Save, Upload } from "lucide-react"
+import { Loader2, Save, Upload, X } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
+import { compressImage } from "@/lib/image-utils"
 
 interface BlogFormProps {
   initialData?: any
@@ -21,6 +22,7 @@ interface BlogFormProps {
 export default function BlogForm({ initialData }: BlogFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [authors, setAuthors] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -127,25 +129,58 @@ export default function BlogForm({ initialData }: BlogFormProps) {
     }
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const maxSize = 5 * 1024 * 1024 // 5MB
-      if (file.size > maxSize) {
-        setError("Image file size must be less than 5MB")
-        return
-      }
+    if (!file) return
 
-      const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+    setUploadingImage(true)
+    setError(null)
+
+    try {
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp"]
       if (!allowedTypes.includes(file.type)) {
-        setError("Please upload a valid image file (JPEG, PNG, WebP, or GIF)")
+        setError("Please upload a valid image file (JPEG, PNG, or WebP)")
         return
       }
 
-      const imageUrl = `/placeholder.svg?height=400&width=600&query=${encodeURIComponent(formData.title || "blog image")}`
-      setFormData((prev) => ({ ...prev, featured_image_url: imageUrl }))
+      // Compress image to below 150KB
+      const compressedFile = await compressImage(file, 150)
+      console.log(
+        `[v0] Original size: ${(file.size / 1024).toFixed(1)}KB, Compressed size: ${(compressedFile.size / 1024).toFixed(1)}KB`,
+      )
+
+      const supabase = createClient()
+      const fileExt = "jpg" // Always save as JPEG after compression
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
+      const filePath = `blog-images/${fileName}`
+
+      const { data, error } = await supabase.storage.from("images").upload(filePath, compressedFile, {
+        cacheControl: "3600",
+        upsert: false,
+      })
+
+      if (error) {
+        console.error("Upload error:", error)
+        setError("Failed to upload image. Please try again.")
+        return
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("images").getPublicUrl(filePath)
+
+      setFormData((prev) => ({ ...prev, featured_image_url: publicUrl }))
       setError(null)
+    } catch (error) {
+      console.error("Upload error:", error)
+      setError("Failed to process image. Please try again.")
+    } finally {
+      setUploadingImage(false)
     }
+  }
+
+  const removeImage = () => {
+    setFormData((prev) => ({ ...prev, featured_image_url: "" }))
   }
 
   return (
@@ -233,20 +268,42 @@ export default function BlogForm({ initialData }: BlogFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image">Featured Image</Label>
+            <Label htmlFor="image">Featured Image (Auto-compressed to &lt;150KB)</Label>
             <div className="flex items-center space-x-4">
-              <Input id="image" type="file" accept="image/*" onChange={handleImageUpload} className="flex-1" />
-              <Button type="button" variant="outline" size="sm">
-                <Upload className="h-4 w-4 mr-2" />
-                Upload
+              <Input
+                id="image"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleImageUpload}
+                className="flex-1"
+                disabled={uploadingImage}
+              />
+              <Button type="button" variant="outline" size="sm" disabled={uploadingImage}>
+                {uploadingImage ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4 mr-2" />
+                )}
+                {uploadingImage ? "Compressing..." : "Upload"}
               </Button>
             </div>
             {formData.featured_image_url && (
-              <img
-                src={formData.featured_image_url || "/placeholder.svg"}
-                alt="Featured image preview"
-                className="w-32 h-32 object-cover rounded-lg mt-2"
-              />
+              <div className="relative inline-block">
+                <img
+                  src={formData.featured_image_url || "/placeholder.svg"}
+                  alt="Featured image preview"
+                  className="w-48 h-32 object-cover rounded-lg mt-2"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  className="absolute top-1 right-1 h-6 w-6 p-0"
+                  onClick={removeImage}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
             )}
           </div>
 

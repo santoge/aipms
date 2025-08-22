@@ -15,7 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Trash2, Loader2 } from "lucide-react"
-import { supabase } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 
 interface DeleteGalleryButtonProps {
   imageId: string
@@ -27,6 +27,7 @@ export default function DeleteGalleryButton({ imageId, imageTitle }: DeleteGalle
   const [loading, setLoading] = useState(false)
 
   const handleDelete = async () => {
+    const supabase = createClient()
     if (!supabase) return
 
     setLoading(true)

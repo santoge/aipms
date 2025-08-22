@@ -1,11 +1,11 @@
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import CategoryManager from "@/components/category-manager"
 
 export const dynamic = "force-dynamic"
 
 export default async function CategoriesPage() {
-  const supabase = createServerClient()
+  const supabase = await createClient()
 
   if (!supabase) {
     return <div>Supabase not configured</div>
