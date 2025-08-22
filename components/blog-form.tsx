@@ -268,7 +268,7 @@ export default function BlogForm({ initialData }: BlogFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image">Featured Image (Auto-compressed to &lt;150KB)</Label>
+            <Label htmlFor="image">Featured Image Upload (Auto-compressed to &lt;150KB)</Label>
             <div className="flex items-center space-x-4">
               <Input
                 id="image"
