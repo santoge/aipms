@@ -15,7 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Trash2, Loader2 } from "lucide-react"
-import { supabase } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 
 interface DeleteBlogButtonProps {
   postId: string
@@ -27,8 +27,7 @@ export default function DeleteBlogButton({ postId, postTitle }: DeleteBlogButton
   const [loading, setLoading] = useState(false)
 
   const handleDelete = async () => {
-    if (!supabase) return
-
+    const supabase = createClient()
     setLoading(true)
 
     try {
@@ -36,9 +35,9 @@ export default function DeleteBlogButton({ postId, postTitle }: DeleteBlogButton
 
       if (error) {
         console.error("Error deleting post:", error)
-        alert("Error deleting post")
+        alert("Error deleting post: " + error.message)
       } else {
-        router.refresh()
+        window.location.reload()
       }
     } catch (err) {
       console.error("Unexpected error:", err)
