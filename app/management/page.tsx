@@ -37,7 +37,7 @@ const managementTeam = [
     position: "Manager",
     image: "/faculty/shyni.jpg",
     bio: "Educational management specialist with expertise in student support services and operational excellence.",
-    qualifications: ["BBA - Special Education"],
+    qualifications: ["BBA - Special Educator"],
     expertise: ["Educational Management", "Student Support Services", "Administrative Operations"],
   },
   {
