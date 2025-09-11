@@ -55,7 +55,7 @@ const facultyMembers = [
     name: "Dr. Anjana S Raj",
     position: "Lecturer",
     department: "Anatomy & Physiology",
-    image: "/faculty/anjana.jpg",
+    image: "/faculty/anjana-new.jpg",
     qualifications: [],
     specialization: "Anatomy & Physiology",
     experience: "",

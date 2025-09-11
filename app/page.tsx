@@ -446,15 +446,12 @@ function HomePage() {
                   {/* Image with Perfect Fit */}
                   <div className="relative w-full h-[400px] bg-gradient-to-br from-gray-50 to-blue-50/30">
                     <Image
-                      src="/lbs-skill-center.png"
+                      src="/lbs-skill-center-new.png"
                       alt="LBS Skill Centre - Government of Kerala"
                       fill
                       className="object-contain p-8 group-hover:scale-105 transition-transform duration-700 filter drop-shadow-lg"
                       style={{ objectFit: "contain" }}
                     />
-
-                    {/* Scanning Line Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-pulse"></div>
                   </div>
 
                   {/* Tech Grid Overlay */}
@@ -547,7 +544,7 @@ function HomePage() {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <Badge className="mb-4 bg-[#002366]/10 text-[#002366] border-[#002366]/20">Our Network</Badge>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#002366] mb-6">Our Partners</h2>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Our Partners</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Collaborating with leading healthcare institutions
               </p>
