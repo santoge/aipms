@@ -87,7 +87,7 @@ export default function Header() {
           <Link href="/" className="flex items-center group">
             <div className="relative">
               <Image
-                src="/logo-new.png"
+                src="/logo-aipms.png"
                 alt="Adhithyan Institute of Paramedical Science"
                 width={200}
                 height={60}
@@ -247,7 +247,7 @@ export default function Header() {
                 <div className="flex items-center justify-between p-6 border-b border-gray-200/50 sticky top-0 bg-white/80 backdrop-blur-sm z-10">
                   <div className="flex items-center space-x-3">
                     <Image
-                      src="/logo-new.png"
+                      src="/logo-aipms.png"
                       alt="Adhithyan Institute"
                       width={120}
                       height={40}

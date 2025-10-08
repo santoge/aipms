@@ -51,7 +51,7 @@ const managementTeam = [
   },
   {
     id: 5,
-    name: "Thushara. A. J",
+    name: "Dr. Thushara. A. J",
     position: "Principal",
     image: "/leadership/thushara.jpg",
     bio: "Skilled operations manager ensuring smooth functioning of all institute activities and maintaining high operational standards.",

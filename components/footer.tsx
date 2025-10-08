@@ -11,7 +11,7 @@ export default function Footer() {
           {/* Institute Info - Logo only */}
           <div className="space-y-4">
             <div className="flex items-center">
-              <Image src="/logo-new.png" alt="Adhithyan Institute" width={150} height={50} className="h-12 w-auto" />
+              <Image src="/logo-aipms.png" alt="Adhithyan Institute" width={150} height={50} className="h-12 w-auto" />
             </div>
             <p className="text-blue-200 text-sm leading-relaxed">
               Empowering future healthcare professionals through excellence in paramedical education and training.
