@@ -1,14 +1,13 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2, Shield } from "lucide-react"
-import { supabase } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 
 export default function AdminLoginForm() {
   const router = useRouter()
@@ -22,25 +21,27 @@ export default function AdminLoginForm() {
     setLoading(true)
     setError("")
 
-    if (!supabase) {
-      setError("Supabase not configured")
-      setLoading(false)
-      return
-    }
+    const sb = createClient()
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
+      const { error } = await sb.auth.signInWithPassword({ email, password })
 
       if (error) {
         setError(error.message)
-      } else {
-        router.push("/admin")
+        return
       }
-    } catch (err) {
-      setError("An unexpected error occurred")
+
+      router.push("/admin")
+      router.refresh()
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      if (/failed to fetch|fetch failed|TypeError/i.test(msg)) {
+        setError(
+          "Unable to reach Supabase. Please confirm the project is connected and NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY are set.",
+        )
+      } else {
+        setError("An unexpected error occurred")
+      }
     } finally {
       setLoading(false)
     }
