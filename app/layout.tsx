@@ -7,25 +7,28 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: {
-    default: "Adhithyan Group of Institutions | Adhithyan Institute of Paramedical Sciences | AIPMS",
+    default: "Best Paramedical College in Trivandrum | Top Healthcare Education in Kerala | AIPMS",
     template: "%s | Adhithyan Institute of Paramedical Sciences",
   },
   description:
-    "Leading paramedical science institute in Kerala offering comprehensive healthcare education programs. Join AIPMS for quality medical training and career opportunities in healthcare.",
+    "Best paramedical college in Trivandrum, Kerala offering top-ranked healthcare education. AIPMS provides accredited B.VOC programs and LBS diploma courses with 100% placement guarantee. UGC & NAAC approved institute.",
   keywords: [
-    "paramedical science",
-    "healthcare education",
-    "medical training",
-    "Kerala medical institute",
-    "AIPMS",
-    "Adhithyan Institute",
-    "medical laboratory technology",
-    "radiology technology",
-    "operation theatre technology",
-    "dialysis technology",
+    "best paramedical college in trivandrum",
+    "top paramedical college in kerala",
+    "paramedical science college trivandrum",
+    "best medical lab technology college kerala",
+    "top healthcare education trivandrum",
+    "paramedical institute kerala",
+    "medical laboratory technology course",
+    "dialysis technology college",
+    "radiology technology course",
     "cardiac care technology",
-    "hospital administration",
-    "medical courses Kerala",
+    "hospital administration course",
+    "AIPMS Adhithyan",
+    "paramedical education kerala",
+    "best health sciences college trivandrum",
+    "medical training kerala",
+    "accredited paramedical college",
   ],
   authors: [{ name: "Adhithyan Institute of Paramedical Sciences" }],
   creator: "Adhithyan Institute of Paramedical Sciences",
@@ -81,25 +84,59 @@ export const metadata: Metadata = {
     generator: 'v0.app'
 }
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "EducationalOrganization",
-  name: "Adhithyan Institute of Paramedical Sciences",
-  alternateName: "AIPMS",
-  url: "https://www.adhithyangroupofinstitutions.com",
-  logo: "https://www.adhithyangroupofinstitutions.com/logo-new.png",
-  description: "Leading paramedical science institute in Kerala offering comprehensive healthcare education programs.",
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: "IN",
-    addressRegion: "Kerala",
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    name: "Adhithyan Institute of Paramedical Sciences",
+    alternateName: ["AIPMS", "Adhithyan Group of Institutions"],
+    url: "https://www.adhithyangroupofinstitutions.com",
+    logo: "https://www.adhithyangroupofinstitutions.com/logo-aipms.png",
+    description: "Best paramedical college in Trivandrum, Kerala offering top-ranked healthcare education programs with 100% placement guarantee.",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "IN",
+      addressRegion: "Kerala",
+      addressLocality: "Trivandrum",
+      streetAddress: "Adhithyan Institute Campus",
+    },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "admissions",
+        telephone: "+919562934815",
+      },
+      {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        telephone: "+919562934815",
+      },
+    ],
+    sameAs: ["https://www.adhithyangroupofinstitutions.com"],
+    award: [
+      "UGC Approved",
+      "NAAC Accredited",
+      "Best Paramedical College Award",
+    ],
   },
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "admissions",
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Adhithyan Institute of Paramedical Sciences",
+    description: "Best paramedical college in Trivandrum offering accredited healthcare education",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "IN",
+      addressRegion: "Kerala",
+      addressLocality: "Trivandrum",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: "8.5241",
+      longitude: "76.9366",
+    },
   },
-  sameAs: ["https://www.adhithyangroupofinstitutions.com"],
-}
+]
 
 export default function RootLayout({
   children,
@@ -112,7 +149,8 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" sizes="any" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         <meta name="google-site-verification" content="387f38ad2e78973f" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd[0]) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd[1]) }} />
       </head>
       <body className={inter.className}>{children}</body>
     </html>
