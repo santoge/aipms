@@ -521,14 +521,13 @@ export default function CoursesPage() {
                                 Learn More
                                 <ChevronRight className="ml-2 h-4 w-4" />
                               </Button>
-                              <Link href="/apply">
-                                <Button
-                                  variant="outline"
-                                  className="border-[#002366] text-[#002366] hover:bg-[#002366] hover:text-white transition-all duration-300 bg-transparent"
-                                >
-                                  Apply
-                                </Button>
-                              </Link>
+                              <Button
+                                variant="outline"
+                                onClick={() => window.open("https://docs.google.com/forms/d/e/1FAIpQLSeI3ppeaRFfiZSx8DxoOf8uGJfxIYlwV1PXL3x4Kt1KXb8ATw/viewform?usp=publish-editor", "_blank")}
+                                className="border-[#002366] text-[#002366] hover:bg-[#002366] hover:text-white transition-all duration-300 bg-transparent"
+                              >
+                                Apply
+                              </Button>
                             </div>
                           </CardContent>
                         </Card>

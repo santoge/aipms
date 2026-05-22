@@ -98,15 +98,17 @@ export default function AdmissionsPopup() {
 
             {/* CTA Buttons */}
             <div className="flex gap-3">
-              <Link href="/apply" onClick={handleClose} className="flex-1">
-                <Button
-                  size="sm"
-                  className="w-full bg-gradient-to-r from-[#002366] to-[#004ba3] hover:from-[#003d82] hover:to-[#0056b3] text-white rounded-lg font-bold text-sm shadow-lg hover:shadow-xl transition-all"
-                >
-                  <GraduationCap className="h-4 w-4 mr-2" />
-                  Apply Now
-                </Button>
-              </Link>
+              <Button
+                size="sm"
+                onClick={() => {
+                  handleClose()
+                  window.open("https://docs.google.com/forms/d/e/1FAIpQLSeI3ppeaRFfiZSx8DxoOf8uGJfxIYlwV1PXL3x4Kt1KXb8ATw/viewform?usp=publish-editor", "_blank")
+                }}
+                className="flex-1 bg-gradient-to-r from-[#002366] to-[#004ba3] hover:from-[#003d82] hover:to-[#0056b3] text-white rounded-lg font-bold text-sm shadow-lg hover:shadow-xl transition-all"
+              >
+                <GraduationCap className="h-4 w-4 mr-2" />
+                Apply Now
+              </Button>
 
               <Button
                 size="sm"
