@@ -220,12 +220,13 @@ export default function Header() {
 
           {/* Enhanced CTA Button */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/apply">
-              <Button className="relative bg-gradient-to-r from-[#002366] to-[#003d82] hover:from-[#003d82] hover:to-[#0056b3] text-white px-8 py-3 rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 group overflow-hidden">
-                <span className="relative z-10 font-semibold">Apply Now</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </Button>
-            </Link>
+            <Button 
+              onClick={() => window.open("https://docs.google.com/forms/d/e/1FAIpQLSeI3ppeaRFfiZSx8DxoOf8uGJfxIYlwV1PXL3x4Kt1KXb8ATw/viewform?usp=publish-editor", "_blank")}
+              className="relative bg-gradient-to-r from-[#002366] to-[#003d82] hover:from-[#003d82] hover:to-[#0056b3] text-white px-8 py-3 rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 group overflow-hidden"
+            >
+              <span className="relative z-10 font-semibold">Apply Now</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </Button>
           </div>
 
           {/* Enhanced Mobile Menu */}
@@ -311,14 +312,15 @@ export default function Header() {
 
                 {/* Mobile CTA */}
                 <div className="p-6 border-t border-gray-200/50 sticky bottom-0 bg-white/80 backdrop-blur-sm">
-                  <Link href="/apply">
-                    <Button
-                      className="w-full bg-gradient-to-r from-[#002366] to-[#003d82] hover:from-[#003d82] hover:to-[#0056b3] text-white py-4 rounded-2xl shadow-xl font-semibold text-lg"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Apply Now
-                    </Button>
-                  </Link>
+                  <Button
+                    className="w-full bg-gradient-to-r from-[#002366] to-[#003d82] hover:from-[#003d82] hover:to-[#0056b3] text-white py-4 rounded-2xl shadow-xl font-semibold text-lg"
+                    onClick={() => {
+                      setIsOpen(false)
+                      window.open("https://docs.google.com/forms/d/e/1FAIpQLSeI3ppeaRFfiZSx8DxoOf8uGJfxIYlwV1PXL3x4Kt1KXb8ATw/viewform?usp=publish-editor", "_blank")
+                    }}
+                  >
+                    Apply Now
+                  </Button>
                 </div>
               </div>
             </SheetContent>
